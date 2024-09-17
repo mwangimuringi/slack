@@ -90,7 +90,6 @@ export const SignUpCard = ({setState}: SignUpCardProps) => {
           </span>
         </p>
       </CardContent>
-      Sign Up Card
     </Card>
   );
 };

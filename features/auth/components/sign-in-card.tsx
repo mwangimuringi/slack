@@ -82,7 +82,6 @@ export const SignInCard = ({setState}: SignInCardProps) => {
           </span>
         </p>
       </CardContent>
-      Sign In Card
     </Card>
   );
 };
