@@ -11,16 +11,44 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import { useCreateWorkspaceModal } from "../store/use-create-workspace-modal";
+import { useCreateWorkspace } from "../api/use-create-workspace";
+import router from "next/router";
 
 export const CreateWorkspaceModal = () => {
   const [open, setOpen] = useCreateWorkspaceModal();
+
+  const { mutate } = useCreateWorkspace();
 
   const handleClose = () => {
     setOpen(false);
     // TODO: redirect to workspace
   };
+
+  const handleSubmit = async() => {
+    try {
+        const data = await mutate(
+            {
+              name: "Workspace 1",
+            },
+            {
+              onSuccess: (data) => {
+                // TODO: redirect to workspace id
+                router.push(`/workspaces/${data}`);
+              },
+              onError: () => {
+                //show toast error
+              },
+              onSettled: () => {
+                //Reset form
+              },
+            });
+    } catch (error) {
+
+    }
+     
+  };
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
           <form className="space-y-4">
