@@ -17,7 +17,7 @@ import router from "next/router";
 export const CreateWorkspaceModal = () => {
   const [open, setOpen] = useCreateWorkspaceModal();
 
-  const { mutate } = useCreateWorkspace();
+  const { mutate ,isPending, isSuccess, isError } = useCreateWorkspace();
 
   const handleClose = () => {
     setOpen(false);
