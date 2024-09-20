@@ -1,17 +1,14 @@
 //Created a workspace redirect
+"use client";
 
-interface WorkspaceIdPageProps {
-  params: {
-    workspaceId: string;
-  };
-}
-
+import { useParams } from 'next/navigation';
 import React from 'react'
 
-const WorkspaceIdPage = ({params}: WorkspaceIdPageProps) => {
-  return (
+const WorkspaceIdPage = () => {
+    const workspaceId = useWorkspaceId();
+    return (
     <div>
-      ID: {params.workspaceId}
+      ID: {workspaceId}
     </div>
   )
 }
