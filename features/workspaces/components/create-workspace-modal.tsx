@@ -3,7 +3,6 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -12,10 +11,11 @@ import { Button } from "@/components/ui/button";
 
 import { useCreateWorkspaceModal } from "../store/use-create-workspace-modal";
 import { useCreateWorkspace } from "../api/use-create-workspace";
-import router from "next/router";
+import { useState } from "react";
 
 export const CreateWorkspaceModal = () => {
   const [open, setOpen] = useCreateWorkspaceModal();
+  const [name, setName] = useState("");
 
   const { mutate, isPending } = useCreateWorkspace();
 
@@ -24,37 +24,46 @@ export const CreateWorkspaceModal = () => {
     // TODO: redirect to workspace
   };
 
-  const handleSubmit = async() => {
-    try {
-        const data = await mutate(
-            {
-              name: "Workspace 1",
-            },
-            {
-              onSuccess: (data) => {
-                // TODO: redirect to workspace id
-                router.push(`/workspaces/${data}`);
-              },
-              onError: () => {
-                //show toast error
-              },
-              onSettled: () => {
-                //Reset form
-              },
-            });
-    } catch (error) {
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+    // try {
+    //     const data = await mutate(
+    //         {
+    //           name: "Workspace 1",
+    //         },
+    //         {
+    //           onSuccess: (data) => {
+    //             // TODO: redirect to workspace id
+    //             router.push(`/workspaces/${data}`);
+    //           },
+    //           onError: () => {
+    //             //show toast error
+    //           },
+    //           onSettled: () => {
+    //             //Reset form
+    //           },
+    //         });
+    // } catch (error) {
 
-    }
+    // }
+    e.preventDefault();
+
+    mutate({ name }, {
+       onSuccess(data) {
+            console.log(data);
+       }
+    })
+
      
   };
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <Input
-              value=""
-              disabled={false}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              disabled={isPending}
               required
               autoFocus
               minLength={3}
@@ -62,7 +71,7 @@ export const CreateWorkspaceModal = () => {
             />
 
             <div className="flex justify-end">
-              <Button disabled={false}>Create</Button>
+              <Button disabled={isPending}>Create</Button>
             </div>
           </form>
           <DialogTitle>Create Workspace</DialogTitle>
