@@ -8,12 +8,15 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Toast } from "sonner";
 
 import { useCreateWorkspaceModal } from "../store/use-create-workspace-modal";
 import { useCreateWorkspace } from "../api/use-create-workspace";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export const CreateWorkspaceModal = () => {
+    const router = useRouter();
   const [open, setOpen] = useCreateWorkspaceModal();
   const [name, setName] = useState("");
 
@@ -21,6 +24,7 @@ export const CreateWorkspaceModal = () => {
 
   const handleClose = () => {
     setOpen(false);
+    setName("");
     // TODO: redirect to workspace
   };
 
@@ -48,12 +52,13 @@ export const CreateWorkspaceModal = () => {
     e.preventDefault();
 
     mutate({ name }, {
-       onSuccess(data) {
-            console.log(data);
+       onSuccess(id) {
+           Toast.success("Workspace created");
+           router.push(`/workspace/${id}`);
+           handleClose();
        }
     })
-
-     
+  
   };
   return (
     <Dialog open={open} onOpenChange={handleClose}>
