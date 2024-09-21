@@ -14,9 +14,9 @@ export const current = query({
         const member = await ctx.db
             .query("members")
             .withIndex("by_workspace_id_user_id", (q) =>
-                q.eq("workspaceId", ags.workspaceId).eq("userId", userId)
+                q.eq("workspaceId", args.workspaceId).eq("userId", userId)
             )
-            .collect();
+            .unique();
         if (!member) {
             return null;
         }
