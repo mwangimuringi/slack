@@ -1,5 +1,8 @@
-"use client";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,80 +10,55 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Toast } from "sonner";
-
 import { useCreateWorkspaceModal } from "../store/use-create-workspace-modal";
 import { useCreateWorkspace } from "../api/use-create-workspace";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export const CreateWorkspaceModal = () => {
-    const router = useRouter();
-  const [open, setOpen] = useCreateWorkspaceModal();
-  const [name, setName] = useState("");
+  const router = useRouter();
 
-  const { mutate, isPending } = useCreateWorkspace();
+  const form = useForm({
+    defaultValues: {
+      name: "",
+    },
+  });
+
+  const { open, setOpen } = useCreateWorkspaceModal();
+
+  const { mutateAsync, isPending } = useCreateWorkspace();
 
   const handleClose = () => {
     setOpen(false);
-    setName("");
-    // TODO: redirect to workspace
+    form.reset();
   };
 
-  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
-    // try {
-    //     const data = await mutate(
-    //         {
-    //           name: "Workspace 1",
-    //         },
-    //         {
-    //           onSuccess: (data) => {
-    //             // TODO: redirect to workspace id
-    //             router.push(`/workspaces/${data}`);
-    //           },
-    //           onError: () => {
-    //             //show toast error
-    //           },
-    //           onSettled: () => {
-    //             //Reset form
-    //           },
-    //         });
-    // } catch (error) {
+  const handleCreateWorkspace = form.handleSubmit(async ({ name }) => {
+    const workspaceId = await mutateAsync({ name });
+    toast.success("Workspace created");
+    router.push(`/workspace/${workspaceId}`);
+    handleClose();
+  });
 
-    // }
-    e.preventDefault();
-
-    mutate({ name }, {
-       onSuccess(id) {
-           Toast.success("Workspace created");
-           router.push(`/workspace/${id}`);
-           handleClose();
-       }
-    })
-  
-  };
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              disabled={isPending}
-              required
-              autoFocus
-              minLength={3}
-              placeholder="Workspace name e.g. 'Work', 'Personal', 'Home'"
-            />
-
-            <div className="flex justify-end">
-              <Button disabled={isPending}>Create</Button>
-            </div>
-          </form>
-          <DialogTitle>Create Workspace</DialogTitle>
+          <DialogTitle>Add a workspace</DialogTitle>
         </DialogHeader>
+        <form className="space-y-4" onSubmit={handleCreateWorkspace}>
+          <Input
+            {...form.register("name", {
+              required: true,
+              minLength: 3,
+              maxLength: 80,
+            })}
+            disabled={isPending}
+            autoFocus
+            placeholder="Workspace name e.g. 'Work', 'Personal', 'Home'"
+          />
+          <div className="flex justify-end">
+            <Button disabled={isPending}>Create</Button>
+          </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
