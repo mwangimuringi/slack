@@ -1,3 +1,5 @@
+"use client";
+
 import { Toolbar } from "./toolbar";
 
 interface WorkspaceLayoutProps  {
