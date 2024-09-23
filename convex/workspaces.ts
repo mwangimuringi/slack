@@ -123,7 +123,7 @@ export const update = mutation({
         throw new Error("Not authorized");
       }
 
-      await ctx.db.patch(args.id, { 
+     await ctx.db.patch(args.id, { 
         name: args.name 
       });
 

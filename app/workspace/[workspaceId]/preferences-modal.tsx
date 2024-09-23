@@ -10,6 +10,7 @@ import {
   DialogClose,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { useUpdateWorkspace } from "@/features/workspaces/api/use-update-workspace";
 
 interface PreferencesModalProps {
   open: boolean;
@@ -23,6 +24,8 @@ export const PreferencesModal = ({
   initialValue,
 }: PreferencesModalProps) => {
   const [value, setValue] = useState(initialValue);
+
+  const { mutate: updateWorkspace, isPending: isUpdatingWorkspace } = useUpdateWorkspace();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
