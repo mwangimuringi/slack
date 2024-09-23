@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { TrashIcon } from "lucide-react";
+import { useUpdateWorkspace } from "@/features/workspaces/api/use-update-workspace";
 
 import {
   Dialog,
@@ -10,7 +11,7 @@ import {
   DialogClose,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { useUpdateWorkspace } from "@/features/workspaces/api/use-update-workspace";
+import { useRemoveWorkspace } from "@/features/workspaces/api/use-remove-workspace";
 
 interface PreferencesModalProps {
   open: boolean;
@@ -25,8 +26,11 @@ export const PreferencesModal = ({
 }: PreferencesModalProps) => {
   const [value, setValue] = useState(initialValue);
 
-  const { mutate: updateWorkspace, isPending: isUpdatingWorkspace } = useUpdateWorkspace();
-
+  const { mutate: updateWorkspace, isPending: isUpdatingWorkspace } =
+    useUpdateWorkspace();
+  const { mutate: removeWorkspace, isPending: isRemovingWorkspace } =
+    useRemoveWorkspace();
+    
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="p-0 bg-gray-50 overflow-hidden">
@@ -41,14 +45,12 @@ export const PreferencesModal = ({
                 Edit
               </p>
             </div>
-            <p className="text-sm">
-                { value }
-            </p>
+            <p className="text-sm">{value}</p>
           </div>
           <button
-          disabled = { false }
-          onClick={() => { }}
-          className="flex items-center gap-x-2 px-5 py-4 bg-white rounded-lg border cursor-pointer hover:bg-gray-50 text-rose-600"
+            disabled={false}
+            onClick={() => {}}
+            className="flex items-center gap-x-2 px-5 py-4 bg-white rounded-lg border cursor-pointer hover:bg-gray-50 text-rose-600"
           >
             <TrashIcon className="w-4 h-4" />
             <p className="text-sm font-semibold">Delete workspace</p>
