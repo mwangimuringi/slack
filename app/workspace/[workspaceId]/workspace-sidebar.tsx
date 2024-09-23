@@ -1,7 +1,7 @@
 import { useCurrentMember } from "@/features/members/api/use-current-member";
 import { useGetWorkspace } from "@/features/workspaces/api/use-get-workspace";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
-import { AlertTriangle, Loader, MessageSquare, MessageSquareText, Sidebar } from "lucide-react";
+import { AlertTriangle, Loader, MessageSquare, MessageSquareText, SendHorizontal, Sidebar } from "lucide-react";
 import { WorkspaceHeader } from "./workspace-header";
 import { Doc } from "@/convex/_generated/dataModel";
 import { SidebarItem } from "./sidebar-item";
@@ -44,6 +44,11 @@ export const WorkspaceSidebar = () => {
           label = "Threads"
           icon = { MessageSquareText }
           id = "threads"
+          />
+           <SidebarItem 
+          label = "Drafts & Sent"
+          icon = { SendHorizontal }
+          id = "drafts"
           />
         </div>
     </div>
