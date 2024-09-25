@@ -9,11 +9,13 @@ import {
 } from "lucide-react";
 
 import { useGetChannels } from "@/features/channels/api/use-get-channels";
+import { useGetMembers } from "@/features/members/api/use-get-member";
 import { useCurrentMember } from "@/features/members/api/use-current-member";
 import { useGetWorkspace } from "@/features/workspaces/api/use-get-workspace";
 
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 
+import { UserItem } from "./user-item";
 import { SidebarItem } from "./sidebar-item";
 import { WorkspaceHeader } from "./workspace-header";
 import { WorkspaceSection } from "./workspace-section";
@@ -28,6 +30,9 @@ export const WorkspaceSidebar = () => {
     id: workspaceId,
   });
   const { data: channels, isLoading: channelsLoading } = useGetChannels({
+    workspaceId,
+  });
+  const { data: members, isLoading: membersLoading } = useGetMembers({
     workspaceId,
   });
 
@@ -67,6 +72,16 @@ export const WorkspaceSidebar = () => {
             id={item._id}
           />
         ))}
+      </WorkspaceSection>
+      <WorkspaceSection label="Direct Messages" hint="New direct message" onNew={() => {}}>
+      {members?.map((item) => (
+        <UserItem
+          key={item._id}
+          id={item._id}
+          label={item.user.name}
+          image={item.user.image}
+        />
+      ))}
       </WorkspaceSection>
     </div>
   );
