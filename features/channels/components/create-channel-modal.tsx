@@ -6,10 +6,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import { useCreateWorkChannelModal } from "@/features/channels/store/use-create-channel-modal";
+import { useCreateChannelModal } from "@/features/channels/store/use-create-channel-modal";
 
 export const CreateChannelModal = () => {
-  const [open, setOpen] = useCreateWorkChannelModal();
+  const [open, setOpen] = useCreateChannelModal();
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
