@@ -30,8 +30,20 @@ export const get = query({
       .query("members")
       .withIndex("by_workspace_id_user_id", (q) => q.eq("workspaceId", args.workspaceId))
       .collect();
-
+        //adding functionality to get members of workspace
     const members = [];
+
+    for (const members of data) {
+        const user = await populateUser(ctx, members.userId);
+
+        if (user) {
+            members.push({
+                ...member,
+                user,
+            });
+        }
+    }
+    return members;
   },
 });
 
