@@ -1,10 +1,11 @@
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -16,65 +17,68 @@ import { useCreateChannelModal } from "@/features/channels/store/use-create-chan
 import { useCreateChannel } from "../api/use-create-channel";
 
 export const CreateChannelModal = () => {
-  const router = useRouter();
-  const workspaceId = useWorkspaceId();
+  const router = useRouter()
 
-  const [name, setName] = useState("");
+  const workspaceId = useWorkspaceId()
 
-  const { open, setOpen } = useCreateChannelModal();
+  const [open, setOpen] = useCreateChannelModal()
+  const [name, setName] = useState('')
 
-  const { mutateAsync, isPending } = useCreateChannel();
+  const { mutate, isPending } = useCreateChannel()
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\s+/g, '-').toLowerCase()
+    setName(value)
+  }
 
   const handleClose = () => {
-    setName("");
-    setOpen(false);
-  };
+    setOpen(false)
+    setName('')
+  }
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\s+/g, "-").toLowerCase();
-    setName(value);
-  };
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    mutateAsync({
-      name,
-      workspaceId,
-    })
-      .then((channelId) => {
-        router.push(`/workspace/${workspaceId}/channel/${channelId}`);
-        handleClose();
-        toast.success("Channel created");
-      })
-      .catch((error) => {
-        console.error(error);
-        toast.error("Failed to create channel");
-      });
-  };
+    mutate(
+      { name, workspaceId },
+      {
+        onSuccess(id) {
+          handleClose()
+          toast.success('Channel created')
+          router.push(`/workspace/${workspaceId}/channel/${id}`)
+        },
+        onError() {
+          toast.error('Failed to create channel')
+        },
+      },
+    )
+  }
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent>
+      <DialogContent className='bg-white'>
         <DialogHeader>
           <DialogTitle>Add a channel</DialogTitle>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className='space-y-4' onSubmit={handleSubmit}>
           <Input
+            disabled={isPending}
             value={name}
             onChange={handleChange}
-            disabled={isPending}
-            autoFocus
-            placeholder="e.g. plan-budget"
             required
+            autoFocus
+            placeholder='Channel name'
             minLength={3}
             maxLength={80}
           />
-          <div className="flex justify-end">
-            <Button disabled={isPending}>Create</Button>
+          <div className='flex justify-end'>
+            <Button disabled={isPending} type='submit'>
+              Create
+            </Button>
           </div>
         </form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

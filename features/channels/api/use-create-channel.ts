@@ -3,8 +3,8 @@
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useCallback, useMemo, useState } from "react";
-import { Doc, Id } from "@/convex/_generated/dataModel";
-import { error } from "console";
+import { Id } from "@/convex/_generated/dataModel";
+
 
 type RequestType = {name: string; workspaceId: Id<"workspaces">};
 type ResponseType = Id<"channels"> | null;
@@ -20,11 +20,6 @@ export const useCreateChannel = () => {
     const [data, setData] = useState<ResponseType>(null);
     const [error, setError] = useState<Error | null>(null);
     const[status, setStatus] = useState<"success" | "error" | "settled" | "pending" | null> (null)
-
-    // const[isPending, setIsPending] = useState(false);
-    // const[isSuccess, setIsSuccess] = useState(false);
-    // const[isError, setIsError] = useState(false);
-    // const[isSettled, setIsSettled] = useState(false);
 
     const isPending = useMemo (() => status === "pending", [status]);
     const isSuccess = useMemo (() => status === "success", [status]);
