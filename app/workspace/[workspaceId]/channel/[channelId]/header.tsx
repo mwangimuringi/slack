@@ -1,9 +1,16 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import { TrashIcon } from "lucide-react";
+import { toast } from "sonner";
+
+import { useUpdateChannel } from "@/features/channels/api/use-update-channel";
+import { useRemoveChannel } from "@/features/channels/api/use-remove-channel";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useChannelId } from "@/hooks/use-channel-id";
+import { useConfirm } from "@/hooks/use-confirm";
+
 import {
   Dialog,
   DialogContent,
@@ -19,16 +26,56 @@ interface HeaderProps {
 }
 
 export const Header = ({ title }: HeaderProps) => {
+  const channelId = useChannelId();
+  const [ConfirmDialog, confirm] = useConfirm(
+    "Delete this channel?",
+    "Are you sure you want to delete this channel?"
+  );
+
   const [value, setValue] = useState(title);
   const [editOpen, setEditOpen] = useState(false);
+
+  const { mutate: updateChannel, isPending: isUpdatingChannel } =
+    useUpdateChannel();
+    const { mutate: removeChannel, isPending: isRemovingChannel } =
+    useRemoveChannel();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\s+/g, "-").toLowerCase();
     setValue(value);
   };
 
+  const handleDelete = async () => {
+    const ok = await confirm();
+
+    if (!ok) return;
+
+    removeChannel({ id: channelId }, {
+        onSuccess: () => {
+            toast.success("Channel deleted");
+        }
+    })
+  }
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    updateChannel(
+      { id: channelId, name: value },
+      {
+        onSuccess: () => {
+          toast.success("Channel updated");
+          setEditOpen(false);
+        },
+        onError: () => {
+          toast.error("Failed to update channel");
+        },
+      }
+    );
+  };
+
   return (
     <div className="bg-white border-b h-[49px] flex items-center px-4 overflow-hidden">
+        <ConfirmDialog />
       <Dialog>
         <DialogTrigger asChild>
           <Button
@@ -61,11 +108,11 @@ export const Header = ({ title }: HeaderProps) => {
                 <DialogHeader>
                   <DialogTitle>Rename this channel</DialogTitle>
                 </DialogHeader>
-                <form action="" className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
                   <Input
                     value={value}
-                    disabled={false}
-                    onChange={ handleChange }
+                    disabled={isUpdatingChannel}
+                    onChange={handleChange}
                     required
                     autoFocus
                     minLength={3}
@@ -74,11 +121,11 @@ export const Header = ({ title }: HeaderProps) => {
                   />
                   <DialogFooter>
                     <DialogClose asChild>
-                      <Button variant="outline" disabled={false}>
+                      <Button variant="outline" disabled={isUpdatingChannel}>
                         Cancel
                       </Button>
                     </DialogClose>
-                    <Button disabled={false}>Save</Button>
+                    <Button disabled={isUpdatingChannel}>Save</Button>
                   </DialogFooter>
                 </form>
               </DialogContent>
