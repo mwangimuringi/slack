@@ -37,7 +37,7 @@ export const Header = ({ title }: HeaderProps) => {
 
   const { mutate: updateChannel, isPending: isUpdatingChannel } =
     useUpdateChannel();
-    const { mutate: removeChannel, isPending: isRemovingChannel } =
+  const { mutate: removeChannel, isPending: isRemovingChannel } =
     useRemoveChannel();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,14 +50,15 @@ export const Header = ({ title }: HeaderProps) => {
 
     if (!ok) return;
 
-    removeChannel({ id: channelId }, {
+    removeChannel(
+      { id: channelId },
+      {
         onSuccess: () => {
-            toast.success("Channel deleted");
-        }
-    })
-  }
-
-  
+          toast.success("Channel deleted");
+        },
+      }
+    );
+  };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -77,7 +78,7 @@ export const Header = ({ title }: HeaderProps) => {
 
   return (
     <div className="bg-white border-b h-[49px] flex items-center px-4 overflow-hidden">
-        <ConfirmDialog />
+      <ConfirmDialog />
       <Dialog>
         <DialogTrigger asChild>
           <Button
