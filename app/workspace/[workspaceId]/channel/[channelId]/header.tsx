@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 import { TrashIcon } from "lucide-react";
 import { toast } from "sonner";
 
@@ -10,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useChannelId } from "@/hooks/use-channel-id";
 import { useConfirm } from "@/hooks/use-confirm";
+import { useWorkspaceId } from "@/hooks/use-workspace-id";
 
 import {
   Dialog,
@@ -26,7 +28,9 @@ interface HeaderProps {
 }
 
 export const Header = ({ title }: HeaderProps) => {
+  const router = useRouter();
   const channelId = useChannelId();
+  const workspaceId = useWorkspaceId();
   const [ConfirmDialog, confirm] = useConfirm(
     "Delete this channel?",
     "Are you sure you want to delete this channel?"
@@ -55,6 +59,10 @@ export const Header = ({ title }: HeaderProps) => {
       {
         onSuccess: () => {
           toast.success("Channel deleted");
+          router.push(`/workspace/${workspaceId}`);
+        },
+        onError: () => {
+          toast.error("Failed to delete channel");
         },
       }
     );
@@ -133,7 +141,11 @@ export const Header = ({ title }: HeaderProps) => {
                 </form>
               </DialogContent>
             </Dialog>
-            <button className="flex items-center gap-x-2 px-5 py-4 bg-white rounded-lg border cursor-pointer hover:bg-gray-50 text-rose-600">
+            <button
+              onClick={handleDelete}
+              disabled={isRemovingChannel}
+              className="flex items-center gap-x-2 px-5 py-4 bg-white rounded-lg border cursor-pointer hover:bg-gray-50 text-rose-600"
+            >
               <TrashIcon className="size-4" />
               <p className="text-sm font-semibold">Delete channel</p>
             </button>
