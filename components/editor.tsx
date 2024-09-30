@@ -1,3 +1,6 @@
+import Quill from "quill";
+import "quill/dist/quill.snow.css";
+
 const Editor = () => {
     return (
         <div className="flex flex-col">
