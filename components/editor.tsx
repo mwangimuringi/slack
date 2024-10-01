@@ -31,7 +31,7 @@ const Editor = () => {
       <div className="flex flex-col border border-slate-200  rounded-md overflow-hidden focus-within:border-slate-300 focus-within:shadow-sm transition bg-white">
         <div
           ref={containerRef}
-          className="flex flex-col flex-1 overflow-hidden"
+          className="h-full ql-custom"
         />
       </div>
     </div>
