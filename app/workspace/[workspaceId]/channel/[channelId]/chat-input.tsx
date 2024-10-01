@@ -5,7 +5,7 @@ const Editor = dynamic(() => import ("@/components/editor"), { ssr: false });
 export const ChatInput = () => {
     return(
         <div className="px-5 w-full">Chat Input
-        <Editor />
+        <Editor variant="create"/>
         </div>
     );
 };
