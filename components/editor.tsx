@@ -1,30 +1,29 @@
-import Quill from "quill";
+import Quill, { type QuillOptions } from "quill";
 
 import "quill/dist/quill.snow.css";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 
 const Editor = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const quill = new Quill(containerRef.current, {
+    const container = containerRef.current;
+    const editorContainer = container.appendChild(
+      container.ownerDocument.createElement("div")
+    );
+
+    const options: QuillOptions = {
       theme: "snow",
-      modules: {
-        toolbar: [
-          [{ header: [1, 2, false] }],
-          ["bold", "italic", "underline", "strike"],
-          [{ list: "ordered" }, { list: "bullet" }],
-          ["link", "image", "video"],
-          ["clean"],
-        ],
-      },
-    });
+    };
+
+    new Quill(editorContainer, options);
 
     return () => {
-      quill.destroy();
-    };
+      if (container) {
+        container.innerHTML = "";
+      }
+    }
   }, []);
 
   return (
