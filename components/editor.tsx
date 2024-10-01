@@ -1,6 +1,7 @@
+import { Delta, Op } from "quill/core";
 import { MdSend } from "react-icons/md";
 import { PiTextAa } from "react-icons/pi";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, MutableRefObject } from "react";
 import { ImageIcon, Smile } from "lucide-react";
 import Quill, { type QuillOptions } from "quill";
 
@@ -9,13 +10,32 @@ import { Button } from "./ui/button";
 
 import "quill/dist/quill.snow.css";
 
+type EditorValue = {
+  image: File | null;
+  body: string;
+};
+
 interface EditorProps {
-  
+  onSubmit: ({ image, body }: EditorValue) => void;
+  onCancel?: () => void;
+  placeholder?: string;
+  defaultValue?: Delta | Op[];
+  disabled?: boolean;
+  innerRef?: MutableRefObject<Quill | null>;
   variant?: "create" | "update";
 }
 
-const Editor = ({ variant = "create" }: EditorProps) => {
+const Editor = ({
+  onCancel,
+  onSubmit,
+  placeholder = "Write something...",
+  defaultValue = [],
+  disabled = false,
+  innerRef,
+  variant = "create",
+}: EditorProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!containerRef.current) return;
 
