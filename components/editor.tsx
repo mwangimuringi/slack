@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 
 import { Hint } from "./hint";
 import { Button } from "./ui/button";
+import { EmojiPopover } from "./emoji-popover";
 
 import "quill/dist/quill.snow.css";
 
@@ -75,7 +76,7 @@ const Editor = ({
         toolbar: [
           ["bold", "italic", "underline", "strike"], // toggled buttons
           ["link"],
-          [{list: "ordered"}, {list: "bullet"}],
+          [{ list: "ordered" }, { list: "bullet" }],
         ],
         keyboard: {
           bindings: {
@@ -136,6 +137,12 @@ const Editor = ({
     }
   };
 
+  const onEmojiSelect = (emoji: any) => {
+    const quill = quillRef.current;
+
+    quill?.insertText(quill?.getSelection()?.index || 0, emoji.native);
+  };
+
   const isEmpty = text.replace(/<(.|\n)*?>/g, "").trim().length === 0;
 
   return (
@@ -143,7 +150,9 @@ const Editor = ({
       <div className="flex flex-col border border-slate-200  rounded-md overflow-hidden focus-within:border-slate-300 focus-within:shadow-sm transition bg-white">
         <div ref={containerRef} className="h-full ql-custom" />
         <div className="flex px-2 pb-2 z-[5] ">
-          <Hint label={isToolbarVisible ? "Hide formatting" : "Show formatting"}>
+          <Hint
+            label={isToolbarVisible ? "Hide formatting" : "Show formatting"}
+          >
             <Button
               disabled={disabled}
               size="iconSm"
@@ -154,16 +163,15 @@ const Editor = ({
             </Button>
           </Hint>
 
-          <Hint label="Emoji">
+          <EmojiPopover onEmojiSelect={onEmojiSelect}>
             <Button
               disabled={disabled}
               size="iconSm"
               variant="ghost"
-              onClick={() => {}}
             >
               <Smile className="size-4" />
             </Button>
-          </Hint>
+          </EmojiPopover>
           {variant === "create" && (
             <Hint label="Image">
               <Button
@@ -214,11 +222,16 @@ const Editor = ({
           )}
         </div>
       </div>
-      <div className="p-2 text-[10px] text-muted-foreground flex justify-end">
-        <p>
-          <strong> Shift + Return </strong> to add a new line
-        </p>
-      </div>
+      {variant === "create" && (
+        <div className={cn(
+          "p-2 text-[10px] text-muted-foreground flex justify-end opacity-0 transition",
+          isEmpty && "opacity-100"
+          )}>
+          <p>
+            <strong> Shift + Return </strong> to add a new line
+          </p>
+        </div>
+      )}
     </div>
   );
 };
