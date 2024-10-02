@@ -1,7 +1,7 @@
 import { Delta, Op } from "quill/core";
 import { MdSend } from "react-icons/md";
 import { PiTextAa } from "react-icons/pi";
-import { useRef, useEffect, MutableRefObject } from "react";
+import { useRef, useEffect, MutableRefObject, useLayoutEffect } from "react";
 import { ImageIcon, Smile } from "lucide-react";
 import Quill, { type QuillOptions } from "quill";
 
@@ -34,7 +34,20 @@ const Editor = ({
   innerRef,
   variant = "create",
 }: EditorProps) => {
+  // refs are usually passed in useEffect,and not in dependency array therefore avoiding re-rendering
+  const submitRef = useRef(onSubmit);
+  const placeholderRef = useRef(placeholder);
+  const quillRef = useRef<Quill | null>(null);
+  const defaultValueRef = useRef(defaultValue);
   const containerRef = useRef<HTMLDivElement>(null);
+  const disabledRef = useRef(disabled);
+
+  useLayoutEffect(() => {
+    submitRef.current = onSubmit;
+    placeholderRef.current = placeholder;
+    defaultValueRef.current = defaultValue;
+    disabledRef.current = disabled;
+  });
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -46,6 +59,7 @@ const Editor = ({
 
     const options: QuillOptions = {
       theme: "snow",
+      placeholder: placeholderRef.current,
     };
 
     new Quill(editorContainer, options);
