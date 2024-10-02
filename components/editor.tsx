@@ -1,9 +1,17 @@
 import { Delta, Op } from "quill/core";
 import { MdSend } from "react-icons/md";
 import { PiTextAa } from "react-icons/pi";
-import { useRef, useEffect, MutableRefObject, useLayoutEffect } from "react";
+import {
+  useRef,
+  useEffect,
+  MutableRefObject,
+  useLayoutEffect,
+  useState,
+} from "react";
 import { ImageIcon, Smile } from "lucide-react";
 import Quill, { type QuillOptions } from "quill";
+
+import { cn } from "@/lib/utils";
 
 import { Hint } from "./hint";
 import { Button } from "./ui/button";
@@ -34,6 +42,8 @@ const Editor = ({
   innerRef,
   variant = "create",
 }: EditorProps) => {
+  const [text, setText] = useState("");
+
   // refs are usually passed in useEffect,and not in dependency array therefore avoiding re-rendering
   const submitRef = useRef(onSubmit);
   const placeholderRef = useRef(placeholder);
@@ -62,14 +72,36 @@ const Editor = ({
       placeholder: placeholderRef.current,
     };
 
-    new Quill(editorContainer, options);
+    const quill = new Quill(editorContainer, options);
+    quillRef.current = quill;
+    quillRef.current.focus();
+
+    if (innerRef) {
+      innerRef.current = quill;
+    }
+
+    quill.setContents(defaultValueRef.current);
+    setText(quill.getText());
+
+    quill.on(Quill.events.TEXT_CHANGE, () => {
+      setText(quill.getText());
+    });
 
     return () => {
+      quill.off(Quill.events.TEXT_CHANGE);
       if (container) {
         container.innerHTML = "";
       }
+      if (quillRef.current) {
+        quillRef.current = null;
+      }
+      if (innerRef) {
+        innerRef.current = null;
+      }
     };
-  }, []);
+  }, [innerRef]);
+
+  const isEmpty = text.replace(/<(.|\n)*?>/g, "").trim().length === 0;
 
   return (
     <div className="flex flex-col">
@@ -132,10 +164,15 @@ const Editor = ({
           )}
           {variant === "create" && (
             <Button
-              disabled={false}
+              disabled={disabled || isEmpty}
               onClick={() => {}}
               size="iconSm"
-              className="ml-auto bg-[#007a5a] hover:bg-[#007a5a]/80 text-white"
+              className={cn(
+                "ml-auto",
+                isEmpty
+                  ? "bg-white hover:bg-white text-muted-foreground"
+                  : "bg-[#007a5a] hover:bg-[#007a5a]/80 text-white"
+              )}
             >
               <MdSend className="size-4" />
             </Button>
