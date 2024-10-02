@@ -43,6 +43,7 @@ const Editor = ({
   variant = "create",
 }: EditorProps) => {
   const [text, setText] = useState("");
+  const [isToolbarVisible, setIsToolbarVisible] = useState(true);
 
   // refs are usually passed in useEffect,and not in dependency array therefore avoiding re-rendering
   const submitRef = useRef(onSubmit);
@@ -70,6 +71,31 @@ const Editor = ({
     const options: QuillOptions = {
       theme: "snow",
       placeholder: placeholderRef.current,
+      modules: {
+        toolbar: [
+          ["bold", "italic", "underline", "strike"], // toggled buttons
+          ["link"],
+          [{list: "ordered"}, {list: "bullet"}],
+        ],
+        keyboard: {
+          bindings: {
+            enter: {
+              key: "Enter",
+              handler: () => {
+                // TODO Submit form
+                return;
+              },
+            },
+            shift_enter: {
+              key: "Enter",
+              shiftKey: true,
+              handler: () => {
+                quill.insertText(quill.getSelection()?.index || 0, "\n");
+              },
+            },
+          },
+        },
+      },
     };
 
     const quill = new Quill(editorContainer, options);
@@ -101,6 +127,15 @@ const Editor = ({
     };
   }, [innerRef]);
 
+  const toggleToolbar = () => {
+    setIsToolbarVisible((current) => !current);
+    const toolbarElememnt = containerRef.current?.querySelector(".ql-toolbar");
+
+    if (toolbarElememnt) {
+      toolbarElememnt.classList.toggle("hidden");
+    }
+  };
+
   const isEmpty = text.replace(/<(.|\n)*?>/g, "").trim().length === 0;
 
   return (
@@ -108,12 +143,12 @@ const Editor = ({
       <div className="flex flex-col border border-slate-200  rounded-md overflow-hidden focus-within:border-slate-300 focus-within:shadow-sm transition bg-white">
         <div ref={containerRef} className="h-full ql-custom" />
         <div className="flex px-2 pb-2 z-[5] ">
-          <Hint label="Hide formatting">
+          <Hint label={isToolbarVisible ? "Hide formatting" : "Show formatting"}>
             <Button
-              disabled={false}
+              disabled={disabled}
               size="iconSm"
               variant="ghost"
-              onClick={() => {}}
+              onClick={toggleToolbar}
             >
               <PiTextAa className="size-4" />
             </Button>
@@ -121,7 +156,7 @@ const Editor = ({
 
           <Hint label="Emoji">
             <Button
-              disabled={false}
+              disabled={disabled}
               size="iconSm"
               variant="ghost"
               onClick={() => {}}
@@ -132,7 +167,7 @@ const Editor = ({
           {variant === "create" && (
             <Hint label="Image">
               <Button
-                disabled={false}
+                disabled={disabled}
                 size="iconSm"
                 variant="ghost"
                 onClick={() => {}}
@@ -148,12 +183,12 @@ const Editor = ({
                 variant="outline"
                 size="sm"
                 onClick={() => {}}
-                disabled={false}
+                disabled={disabled}
               >
                 Cancel
               </Button>
               <Button
-                disabled={false}
+                disabled={disabled}
                 size="sm"
                 onClick={() => {}}
                 className="bg-[#007a5a] hover:bg-[#007a5a]/80 text-white"
