@@ -39,7 +39,7 @@ export const create = mutation({
       throw new Error("Not authenticated");
     }
 
-    //Handle conversationId
+    //TODO Handle conversationId
 
     const messageId = await ctx.db.insert("messages", {
       memberId: member._id,
