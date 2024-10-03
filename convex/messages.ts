@@ -3,6 +3,57 @@ import { v } from "convex/values";
 import { mutation, QueryCtx } from "./_generated/server";
 import { auth } from "./auth";
 import { Id } from "./_generated/dataModel";
+import { count, time } from "console";
+
+const populateThread = async (ctx: QueryCtx, messageId: Id<"messages">) => {
+  const messages = await ctx.db
+    .query("messages")
+    .withIndex("by_parent_message_id", (q) =>
+      q.eq("parentMessageId", messageId)
+    )
+    .collect();
+
+  if (messages.length === 0) {
+    return {
+      count: 0,
+      image: undefined,
+      timestamp: 0,
+    };
+  }
+  const lastMessage = messages[messages.length - 1];
+  const lastMessageMember = await populateMember(ctx, lastMessage.memberId);
+
+  if (!lastMessageMember) {
+    return {
+      count: 0,
+      image: undefined,
+      timestamp: 0,
+    };
+  }
+
+  const lastMessageUser = await populateUser(ctx, lastMessageMember.userId);
+
+  return {
+    count: messages.length,
+    image: lastMessageUser?.image,
+    timestamp: lastMessage._creationTime,
+  }
+};
+
+const populateReactions = (ctx: QueryCtx, messageId: Id<"messages">) => {
+  return ctx.db
+    .query("reactions")
+    .withIndex("by_message_id", (q) => q.eq("messageId", messageId))
+    .collect();
+};
+
+const populateUser = (ctx: QueryCtx, userId: Id<"users">) => {
+  return ctx.db.get(userId);
+};
+
+const populateMember = (ctx: QueryCtx, memberId: Id<"members">) => {
+  return ctx.db.get(memberId);
+};
 
 const getMember = async (
   ctx: QueryCtx,
