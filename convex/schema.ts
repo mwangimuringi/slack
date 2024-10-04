@@ -37,7 +37,7 @@ const schema = defineSchema({
     parentMessageId: v.optional(v.id("messages")),
     //TODO: add coversationId
 
-    updatedAt: v.number(),
+    updatedAt: v.optional( v.number()),
   })
     .index("by_workspace_id", ["workspaceId"])
     .index("by_member_id", ["memberId"])

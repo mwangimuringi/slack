@@ -106,7 +106,7 @@ export const get = query({
 
     return {
       ...results,
-      page: await Promise.all(
+      page: (await Promise.all(
         results.page.map(async (message) => {
           const member = await populateMember(ctx, message.memberId);
           const user = member ? await populateUser(ctx, member.userId) : null;
@@ -148,8 +148,25 @@ export const get = query({
               memberId: Id<"members">[];
             })[]
           );
+
+          const reactionsWithoutMemberIdProperty = dedupedReactions.map(
+            ({ memberId, ...rest }) => rest
+          );
+
+          return {
+            ...message,
+            image,
+            member,
+            user,
+            reactions: reactionsWithoutMemberIdProperty,
+            threadCount: thread.count,
+            threadImage: thread.image,
+            threadTimestamp: thread.timestamp,
+          };
         })
-      ),
+      )).filter(
+        (message): message is NonNullable<typeof message>  => message !== null
+      )
     };
   },
 });
@@ -196,7 +213,6 @@ export const create = mutation({
       conversationId: _conversationId,
       workspaceId: args.workspaceId,
       parentMessageId: args.parentMessageId,
-      updatedAt: Date.now(),
     });
 
     return messageId;
