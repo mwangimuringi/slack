@@ -37,7 +37,8 @@ export const UserItem = ({
   variant,
 }: UserItemProps) => {
     const workspaceId = useWorkspaceId();
-    const avatarFallback = label.charAt(0).toLocaleUpperCase();
+
+    const avatarFallback = authorName.charAt(0).toLocaleUpperCase();
 
   return (
     <Button
