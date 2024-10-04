@@ -23,6 +23,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "convex": "^1.16.0",
+    "date-fns": "^4.1.0",
     "jose": "^5.9.2",
     "jotai": "^2.9.3",
     "jwt-decode": "3.1.2",
