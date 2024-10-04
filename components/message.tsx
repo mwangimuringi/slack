@@ -1,4 +1,8 @@
+import dynamic from "next/dynamic";
+
 import { Id, Doc } from "@/convex/_generated/dataModel";
+
+const Renderer = dynamic (() => import("@/components/renderer"), { ssr: false });
 
 interface MessageProps {
   id: Id<"messages">;
@@ -45,6 +49,8 @@ export const Message = ({
     threadTimestamp,
 }: MessageProps) => {
     return (
-        <div className=""></div>
-    )
+        <div className="">
+          <Renderer value={body} />
+        </div>
+    );
 };
