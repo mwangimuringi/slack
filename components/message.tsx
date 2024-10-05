@@ -131,8 +131,13 @@ export const Message = ({
           </Avatar>
         </button>
         {isEditing ? (
-          <div className="">
+          <div className="w-full h-full">
             Editor
+            onSubmit={handleUpdate}
+            disabled={isPending}
+            defaultValue={JSON.parse(body)}
+            onCancel={() => setEditingId(null)}
+            variant="update"
           </div>
         ): (
       <div className="flex flex-col w-full overflow-hidden">
@@ -161,7 +166,7 @@ export const Message = ({
       {!isEditing && (
         <Toolbar 
         isAuthor={isAuthor}
-        isPending={false}
+        disabled={isPending}
         handleEdit={() => setEditingId(id)}
         handleThread={() => {}}
         handleDelete={() => {}}
