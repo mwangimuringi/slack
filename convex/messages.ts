@@ -68,6 +68,39 @@ const getMember = async (
     .unique();
 };
 
+export const update = mutation({
+  args: {
+    id: v.id("messages"),
+    body: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx);
+
+    if (!userId) {
+      throw new Error("Unauthorized");
+    }
+
+    const message = await ctx.db.get(args.id);
+
+    if (!message) {
+      throw new Error("Message not found");
+    }
+
+    const member = await getMember(ctx, message.workspaceId, userId);
+
+    if (!member || member._id !== message.memberId) {
+      throw new Error("Unauthorized");
+    }
+
+    await ctx.db.patch(args.id, {
+      body: args.body,
+      updatedAt: Date.now(),
+    });
+
+    return args.id;
+  },
+});
+
 export const get = query({
   args: {
     channelId: v.optional(v.id("channels")),
@@ -79,7 +112,7 @@ export const get = query({
     const userId = await auth.getUserId(ctx);
 
     if (!userId) {
-      throw new Error("Not authenticated");
+      throw new Error("Unauthorized");
     }
 
     let _conversationId = args.conversationId;
@@ -106,67 +139,70 @@ export const get = query({
 
     return {
       ...results,
-      page: (await Promise.all(
-        results.page.map(async (message) => {
-          const member = await populateMember(ctx, message.memberId);
-          const user = member ? await populateUser(ctx, member.userId) : null;
+      page: (
+        await Promise.all(
+          results.page.map(async (message) => {
+            const member = await populateMember(ctx, message.memberId);
+            const user = member ? await populateUser(ctx, member.userId) : null;
 
-          if (!member || !user) {
-            return null;
-          }
+            if (!member || !user) {
+              return null;
+            }
 
-          const reactions = await populateReactions(ctx, message._id);
-          const thread = await populateThread(ctx, message._id);
-          const image = message.image
-            ? await ctx.storage.getUrl(message.image)
-            : undefined;
+            const reactions = await populateReactions(ctx, message._id);
+            const thread = await populateThread(ctx, message._id);
+            const image = message.image
+              ? await ctx.storage.getUrl(message.image)
+              : undefined;
 
-          const reactionsWithCounts = reactions.map((reaction) => {
-            return {
-              ...reaction,
-              count: reactions.filter((r) => r.value === reaction.value).length,
-            };
-          });
+            const reactionsWithCounts = reactions.map((reaction) => {
+              return {
+                ...reaction,
+                count: reactions.filter((r) => r.value === reaction.value)
+                  .length,
+              };
+            });
 
-          const dedupedReactions = reactionsWithCounts.reduce(
-            (acc, reaction) => {
-              const existingReaction = acc.find(
-                (r) => r.value === reaction.value
-              );
-              if (existingReaction) {
-                existingReaction.memberIds = Array.from(
-                  new Set([...existingReaction.memberIds, reaction.memberId])
+            const dedupedReactions = reactionsWithCounts.reduce(
+              (acc, reaction) => {
+                const existingReaction = acc.find(
+                  (r) => r.value === reaction.value
                 );
-              } else {
-                acc.push({ ...reaction, memberIds: [reaction.memberId] });
-              }
+                if (existingReaction) {
+                  existingReaction.memberIds = Array.from(
+                    new Set([...existingReaction.memberIds, reaction.memberId])
+                  );
+                } else {
+                  acc.push({ ...reaction, memberIds: [reaction.memberId] });
+                }
 
-              return acc;
-            },
-            [] as (Doc<"reactions"> & {
-              count: number;
-              memberId: Id<"members">[];
-            })[]
-          );
+                return acc;
+              },
+              [] as (Doc<"reactions"> & {
+                count: number;
+                memberId: Id<"members">[];
+              })[]
+            );
 
-          const reactionsWithoutMemberIdProperty = dedupedReactions.map(
-            ({ memberId, ...rest }) => rest
-          );
+            const reactionsWithoutMemberIdProperty = dedupedReactions.map(
+              ({ memberId, ...rest }) => rest
+            );
 
-          return {
-            ...message,
-            image,
-            member,
-            user,
-            reactions: reactionsWithoutMemberIdProperty,
-            threadCount: thread.count,
-            threadImage: thread.image,
-            threadTimestamp: thread.timestamp,
-          };
-        })
-      )).filter(
-        (message): message is NonNullable<typeof message>  => message !== null
-      )
+            return {
+              ...message,
+              image,
+              member,
+              user,
+              reactions: reactionsWithoutMemberIdProperty,
+              threadCount: thread.count,
+              threadImage: thread.image,
+              threadTimestamp: thread.timestamp,
+            };
+          })
+        )
+      ).filter(
+        (message): message is NonNullable<typeof message> => message !== null
+      ),
     };
   },
 });
@@ -184,13 +220,13 @@ export const create = mutation({
     const userId = await auth.getUserId(ctx);
 
     if (!userId) {
-      throw new Error("Not authenticated");
+      throw new Error("Unauthorized");
     }
 
     const member = await getMember(ctx, args.workspaceId, userId);
 
     if (!member) {
-      throw new Error("Not authenticated");
+      throw new Error("Unauthorized");
     }
 
     //TODO Handle conversationId
