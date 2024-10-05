@@ -1,9 +1,12 @@
 import { format, isToday, isYesterday } from "date-fns";
 import dynamic from "next/dynamic";
 
-import { Id, Doc } from "@/convex/_generated/dataModel";
 import { Hint } from "./hint";
+import { Toolbar } from "./toolbar";
 import { Thumbnail } from "./thumbnail";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+
+import { Id, Doc } from "@/convex/_generated/dataModel";
 
 const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
 
@@ -113,7 +116,17 @@ export const Message = ({
           <span className="text-xs text-muted-foreground">{edited}</span>
         ): null}
       </div>
+      {!isEditing && (
+        <Toolbar 
+        isAuthor={isAuthor}
+        isPending={false}
+        handleEdit={() => setEditingId(id)}
+        handleThread={() => {}}
+        handleDelete={() => {}}
+        handleReaction={() => {}}
+        handleThreadButton={hideThreadButton}
+        />
+      )}
     </div>
-  </div>
-  );
+  )
 };
