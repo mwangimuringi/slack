@@ -7,6 +7,7 @@ import { useRemoveMessage } from "@/features/messages/api/use-remove-message";
 import { useToggleReaction } from "@/features/reactions/api/use-toggle-reaction";
 
 import { cn } from "@/lib/utils";
+import { usePanel } from "@/hooks/use-panel";
 import { useConfirm } from "@/hooks/use-confirm";
 
 import { Hint } from "./hint";
@@ -16,6 +17,7 @@ import { Reactions } from "./reactions";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 import { Id, Doc } from "@/convex/_generated/dataModel";
+import { on } from "events";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
@@ -68,6 +70,8 @@ export const Message = ({
   threadImage,
   threadTimestamp,
 }: MessageProps) => {
+const { parentMessageId, onOpenMessage, onClose } = usePanel();
+
   const [ConfirmDialog, confirm] = useConfirm(
     "Delete message?",
     "Are you sure you want to delete this message? This cannot be undone.",
@@ -96,7 +100,9 @@ export const Message = ({
       onSuccess: () => {
         toast.success("Message deleted");
 
-        //TODO: Close thread if opened
+        if (parentMessageId === id) {
+          onClose();
+        }
       },
       onError: () => {
         toast.error("Failed to delete message");
@@ -143,7 +149,7 @@ export const Message = ({
         isAuthor={isAuthor}
         isPending={false}
         handleEdit={() => setEditingId(id)}
-        handleThread={() => {}}
+        handleThread={() => onOpenMessage(id)}
         handleDelete={handleRemove}
         handleReaction={handleReaction}
         hideThreadButton={hideThreadButton}
@@ -214,7 +220,7 @@ export const Message = ({
         isAuthor={isAuthor}
         disabled={isPending}
         handleEdit={() => setEditingId(id)}
-        handleThread={() => {}}
+        handleThread={() => onOpenMessage(id)}
         handleDelete={handleRemove}
         handleReaction={handleReaction}
         hideThreadButton={hideThreadButton}
