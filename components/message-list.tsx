@@ -133,9 +133,6 @@ export const MessageList = ({
           )}
         </div>
       ))}
-      {variant === "channel" && channelName && channelCreationTime && (
-        <ChannelHero name={channelName} creationTime={channelCreationTime} />
-      )}
     </div>
   );
 };

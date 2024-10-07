@@ -31,20 +31,21 @@ interface MessageProps {
   reactions: Array<
     Omit<Doc<"reactions">, "memberId"> & {
       count: number;
-      memberId: Id<"members">[];
+      memberIds: Id<"members">[];
     }
   >;
   body: Doc<"messages">["body"];
-  image: string | null | undefined;
+  image?: string | null;
   createdAt: Doc<"messages">["_creationTime"];
   updatedAt: Doc<"messages">["updatedAt"];
   isEditing: boolean;
   isCompact?: boolean;
-  setEditingId: (id: Id<"messages"> | null) => void;
   hideThreadButton?: boolean;
   threadCount?: number;
   threadImage?: string;
   threadTimestamp?: number;
+  threadName?: string;
+  setEditingId: (id: Id<"messages"> | null) => void;
 }
 
 const formatFullTime = (date: Date) => {
