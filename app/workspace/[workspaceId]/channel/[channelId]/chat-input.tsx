@@ -86,6 +86,7 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
       setIsPending(false);
     }
   };
+  
   return (
     <div className="px-5 w-full">
       Chat Input
