@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { AlertTriangle, Loader, XIcon } from "lucide-react";
 
 import { useGetMessage } from "../api/use-get-message";
@@ -16,6 +17,8 @@ interface ThreadProps {
 
 export const Thread = ({ messageId, onClose }: ThreadProps) => {
   const workspaceId = useWorkspaceId();
+
+  const [editingId, setEditingId] = useState<Id<"messages"> | null>(null);
 
   const { data: currentMember } = useCurrentMember({ workspaceId });
   const { data: message, isLoading: loadingMessage } = useGetMessage({
@@ -74,8 +77,8 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
         updatedAt={message.updatedAt}
         id={message._id}
         reactions={message.reactions}
-        isEditing={false}
-        setEditingId={() => {}}
+        isEditing={editingId === message._id}
+        setEditingId={setEditingId}
       />
     </div>
   );
