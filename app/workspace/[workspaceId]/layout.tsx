@@ -3,6 +3,8 @@
 import React from "react";
 import { Loader } from "lucide-react";
 
+import { Thread } from "@/features/messages/components/thread";
+
 import {
   ResizableHandle,
   ResizablePanel,
@@ -15,7 +17,6 @@ import { Toolbar } from "./toolbar";
 import { WorkspaceSidebar } from "./workspace-sidebar";
 
 import { Id } from "@/convex/_generated/dataModel";
-import { Thread } from "@/features/messages/components/thread";
 interface WorkspaceLayoutProps {
   children: React.ReactNode;
 }
