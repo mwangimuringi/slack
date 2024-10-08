@@ -20,5 +20,18 @@ export const createOrGet = mutation({
         q.eq("workspaceId", args.workspaceId).eq("userId", userId)
       )
       .unique();
+
+      const otherMember = await ctx.db.get(args.memberId);
+
+      if (!currentMember || !otherMember) {
+        throw new Error("Member not found");
+      }
+
+      const existingConversation = await ctx.db
+        .query("conversations")
+        .withIndex("by_member_ids", (q) =>
+          q.eq("memberIds", currentMember.id).eq("memberIds", otherMember.id)
+        )
+        .unique();
   },
 });
