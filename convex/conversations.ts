@@ -21,17 +21,26 @@ export const createOrGet = mutation({
       )
       .unique();
 
-      const otherMember = await ctx.db.get(args.memberId);
+    const otherMember = await ctx.db.get(args.memberId);
 
-      if (!currentMember || !otherMember) {
-        throw new Error("Member not found");
-      }
+    if (!currentMember || !otherMember) {
+      throw new Error("Member not found");
+    }
 
-      const existingConversation = await ctx.db
-        .query("conversations")
-        .withIndex("by_member_ids", (q) =>
-          q.eq("memberIds", currentMember.id).eq("memberIds", otherMember.id)
+    const existingConversation = await ctx.db
+      .query("conversations")
+      .filter((q) => q.eq(q.field("workspaceId"), args.workspaceId))
+      .filter((q) =>
+        q.or(
+          q.and(
+            q.eq(q.field("memberOneId"), currentMember._id),
+            q.eq(q.field("memberTwoId"), otherMember._id)
+          ),
+          q.and(
+            q.eq(q.field("memberOneId"), otherMember._id),
+            q.eq(q.field("memberTwoId"), currentMember._id)
+          ),
         )
-        .unique();
+      );
   },
 });
