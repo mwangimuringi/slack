@@ -14,7 +14,7 @@ type RequestType = {
   parentMessageId?: Id<"messages">;
   conversationId?: Id<"conversations">;
 };
-type ResponseType = Id<"messages"> | null;
+type ResponseType = Id<"conversations"> | null;
 
 type Options = {
   onSuccess?: (data: Id<"workspaces">) => void;

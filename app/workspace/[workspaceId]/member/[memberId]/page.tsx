@@ -1,20 +1,20 @@
 "use client";
 
+import { Id } from "@/convex/_generated/dataModel";
 import { useCreateOrGetConversation } from "@/features/conversations/use-create-or-get-conversations";
 
 import { useMemberId } from "@/hooks/use-member-id";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { AlertTriangle, Loader } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const MemberPage = () => {
   const memberId = useMemberId();
   const workspaceId = useWorkspaceId();
 
+  const [conversationId, setConversationId] = useState<Id<"conversations"> | null>(null);
+
   const { data, mutate, isPending } = useCreateOrGetConversation();
-
-  console.log({ data });
-
   useEffect(() => {
     mutate(
       {
