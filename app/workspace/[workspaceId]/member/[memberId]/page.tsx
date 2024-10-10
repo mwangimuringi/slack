@@ -8,6 +8,7 @@ import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { AlertTriangle, Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Conversation } from "./conversation";
 
 const MemberPage = () => {
   const memberId = useMemberId();
