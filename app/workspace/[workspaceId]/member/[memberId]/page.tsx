@@ -7,6 +7,7 @@ import { useMemberId } from "@/hooks/use-member-id";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { AlertTriangle, Loader } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const MemberPage = () => {
   const memberId = useMemberId();
@@ -23,10 +24,10 @@ const MemberPage = () => {
       },
       {
         onSuccess(data) {
-          console.log({ data });
+          setConversationId(data);
         },
         onError(error) {
-          console.log({ error });
+          toast.error("Failed to create conversation");
         },
       }
     );
@@ -40,7 +41,7 @@ const MemberPage = () => {
     );
   }
 
-  if (!data) {
+  if (!conversationId) {
     return (
       <div className="h-full flex flex-col gap-y-2 items-center justify-center">
         <AlertTriangle className="size-6 text-muted-foreground" />
@@ -51,7 +52,7 @@ const MemberPage = () => {
     );
   }
 
-  return <div className="">{JSON.stringify({ data })}</div>;
+  return <div className="">{JSON.stringify(conversationId)}</div>;
 };
 
 export default MemberPage;
