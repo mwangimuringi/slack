@@ -15,7 +15,7 @@ const MemberPage = () => {
 
   const [conversationId, setConversationId] = useState<Id<"conversations"> | null>(null);
 
-  const { data, mutate, isPending } = useCreateOrGetConversation();
+  const { mutate, isPending } = useCreateOrGetConversation();
   useEffect(() => {
     mutate(
       {
@@ -52,7 +52,7 @@ const MemberPage = () => {
     );
   }
 
-  return <div className="">{JSON.stringify(conversationId)}</div>;
+  return <Conversation id={conversationId} />;
 };
 
 export default MemberPage;
