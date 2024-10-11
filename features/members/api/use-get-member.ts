@@ -6,6 +6,7 @@ import { useQuery } from "convex/react";
 interface UseGetMemberProps {
   id: Id<"members">;
 }
+
 export const useGetMember = ({ id }: UseGetMemberProps) => {
   const data = useQuery(api.members.getById, { id });
   const isLoading = data === undefined;
@@ -15,3 +16,5 @@ export const useGetMember = ({ id }: UseGetMemberProps) => {
     isLoading,
   };
 };
+
+export default useGetMember;
