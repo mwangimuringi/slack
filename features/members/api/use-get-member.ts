@@ -5,7 +5,6 @@ import { useQuery } from "convex/react";
 
 interface UseGetMemberProps {
   id: Id<"members">;
-  // TODO: add more props
 }
 
 export const useGetMember = ({ id }: UseGetMemberProps) => {
