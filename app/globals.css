@@ -29,11 +29,8 @@ body {
 @layer utilities {
   .text-balance {
     text-wrap: balance;
-    text-align: end;
   }
 }
-
-
 
 @layer base {
   :root {
