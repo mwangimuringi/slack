@@ -12,6 +12,9 @@ export const useGetMember = ({ id }: UseGetMemberProps) => {
   const isLoading = data === undefined;
   if (isLoading) return { data: undefined, isLoading };
 
+  if (data.kind === "error") {
+    throw data.error;
+  }
   return {
     data,
     isLoading,
