@@ -70,7 +70,7 @@ export const get = query({
       )
       .collect();
     //adding functionality to get members of workspace
-    const members = [];
+    const members: any[] | PromiseLike<any[]> = [];
 
     for (const members of data) {
       const user = await populateUser(ctx, members.userId);
