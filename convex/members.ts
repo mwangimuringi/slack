@@ -29,6 +29,9 @@ export const getById = query({
         q.eq("workspaceId", member.workspaceId).eq("userId", userId)
       )
 
+      .unique();
+      //adding functionality to get members of workspace
+
     if (!currentMember) {
       return null;
     }
