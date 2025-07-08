@@ -10,6 +10,8 @@ interface UseGetMemberProps {
 export const useGetMember = ({ id }: UseGetMemberProps) => {
   const data = useQuery(api.members.getById, { id });
   const isLoading = data === undefined;
+  const isLoading = data === undefined;
+  if (isLoading) return { data: undefined, isLoading };
 
   return {
     data,
