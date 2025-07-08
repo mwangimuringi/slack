@@ -43,11 +43,6 @@ export const getById = query({
       ...member,
       user,
     };
-
-    return {
-      ...member,
-      userId,
-    };
   },
 });
 
