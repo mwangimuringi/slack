@@ -10,8 +10,6 @@ interface UseGetMembersProps {
 export const useGetMembers = ({ workspaceId }: UseGetMembersProps) => {
   const data = useQuery(api.members.get, { workspaceId });
   const isLoading = data === undefined;
-  if (isLoading) return { data: undefined, isLoading };
-  if (data.length === 0) return { data: undefined, isLoading };
 
   return {
     data,
