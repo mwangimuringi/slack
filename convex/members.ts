@@ -7,7 +7,7 @@ import { getAuthUserId } from "@convex-dev/auth/server";
 
 // TODO: add members to workspace frontend
 const populateUser = async (ctx: QueryCtx, id: Id<"users">) => {
-    return ctx.db.get(id);
+  return ctx.db.get(id);
 };
 
 export const getById = query({
@@ -27,10 +27,7 @@ export const getById = query({
       .query("members")
       .withIndex("by_workspace_id_user_id", (q) =>
         q.eq("workspaceId", member.workspaceId).eq("userId", userId)
-      )
-
-      .unique();
-      //adding functionality to get members of workspace
+      );
 
     if (!currentMember) {
       return null;
@@ -68,20 +65,22 @@ export const get = query({
     }
     const data = await ctx.db
       .query("members")
-      .withIndex("by_workspace_id_user_id", (q) => q.eq("workspaceId", args.workspaceId))
+      .withIndex("by_workspace_id_user_id", (q) =>
+        q.eq("workspaceId", args.workspaceId)
+      )
       .collect();
-        //adding functionality to get members of workspace
+    //adding functionality to get members of workspace
     const members = [];
 
     for (const members of data) {
-        const user = await populateUser(ctx, members.userId);
+      const user = await populateUser(ctx, members.userId);
 
-        if (user) {
-            members.push({
-                ...member,
-                user,
-            });
-        }
+      if (user) {
+        members.push({
+          ...member,
+          user,
+        });
+      }
     }
     return members;
   },
