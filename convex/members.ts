@@ -80,7 +80,6 @@ export const get = query({
           ...member,
           user,
         });
-        
       }
     }
     return members;
