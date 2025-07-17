@@ -38,8 +38,11 @@ export const UserItem = ({
 }: UserItemProps) => {
     const workspaceId = useWorkspaceId();
 
-    const avatarFallback = authorName.charAt(0).toLocaleUpperCase();
-
+const avatarFallback = (
+  <span className="font-medium text-xs">
+    {label.charAt(0)}
+  </span>
+);
   return (
     <Button
       variant="transparent"
