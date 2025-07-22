@@ -35,6 +35,7 @@ const schema = defineSchema({
     channelId: v.optional(v.id("channels")),
     conversationId: v.optional(v.id("conversations")),
     parentMessageId: v.optional(v.id("messages")),
+    parseFloat: v.optional(v.number()),
     //TODO: add coversationId
 
     updatedAt: v.optional( v.number()),
