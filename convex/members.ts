@@ -75,12 +75,6 @@ export const get = query({
     for (const members of data) {
       const user = await populateUser(ctx, members.userId);
 
-      if (user) {
-        members.push({
-          ...member,
-          user,
-        });
-      }
     }
     return members;
   },
