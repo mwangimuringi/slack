@@ -8,4 +8,5 @@ auth.addHttpRoutes(httpRouter());
 addEventListener("fetch", (event) => {
   event.respondWith(http.handle(event.request));
 });
+
 export default http;
