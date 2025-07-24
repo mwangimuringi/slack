@@ -39,6 +39,7 @@ export const PreferencesModal = ({
   );
 
   const [value, setValue] = useState(initialValue);
+  const [open, setOpen] = useConfirm(open);
   const [editOpen, setEditOpen] = useState(false);
 
   const { mutate: updateWorkspace, isPending: isUpdatingWorkspace } =
