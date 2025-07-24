@@ -39,7 +39,6 @@ export const PreferencesModal = ({
   );
 
   const [value, setValue] = useState(initialValue);
-  const [open, setOpen] = useConfirm(open);
   const [editOpen, setEditOpen] = useState(false);
 
   const { mutate: updateWorkspace, isPending: isUpdatingWorkspace } =
@@ -50,7 +49,7 @@ export const PreferencesModal = ({
   const handleRemove = async () => {
     const ok = await confirm();
     if (!ok) return;
-    
+
     removeWorkspace(
       {
         id: workspaceId,
@@ -89,7 +88,7 @@ export const PreferencesModal = ({
 
   return (
     <>
-    <ConfirmDialog />
+      <ConfirmDialog />
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="p-0 bg-gray-50 overflow-hidden">
           <DialogHeader className="p-4 border-b bg-white">
