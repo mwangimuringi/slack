@@ -42,6 +42,7 @@ export const PreferencesModal = ({
   const [editOpen, setEditOpen] = useState(false);
 
   const { mutate: updateWorkspace, isPending: isUpdatingWorkspace } =
+  console 
     useUpdateWorkspace();
   const { mutate: removeWorkspace, isPending: isRemovingWorkspace } =
     useRemoveWorkspace();
