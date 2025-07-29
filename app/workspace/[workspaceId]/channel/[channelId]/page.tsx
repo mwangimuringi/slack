@@ -5,6 +5,7 @@ import { useGetChannel } from "@/features/channels/api/use-get-channel";
 import { useGetMessages } from "@/features/messages/api/use-get-messages";
 
 import { useChannelId } from "@/hooks/use-channel-id";
+
 import { MessageList } from "@/components/message-list";
 
 import { Header } from "./header";
