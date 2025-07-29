@@ -12,6 +12,7 @@ export const Conversation = ({ id }: ConversationProps) => {
       <p className="text-sm font-semibold">Conversation name</p>
       <p className="text-sm text-[#1264a3] hover:underline font-semibold">Edit</p>
       <TrashIcon className="w-4 h-4" />
+      
     </div>
   </div>
 );
