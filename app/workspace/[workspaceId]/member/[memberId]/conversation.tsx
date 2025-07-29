@@ -1,4 +1,5 @@
 import { Id } from "@/convex/_generated/dataModel";
+import { TrashIcon } from "lucide-react";
 
 interface ConversationProps {
   id: Id<"conversations">;
