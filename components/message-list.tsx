@@ -9,7 +9,6 @@ import { GetMessagesReturnType } from "@/features/messages/api/use-get-messages"
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 
 import { Message } from "./message";
-import { ChannelHero } from "./channel-hero";
 
 import { Id } from "@/convex/_generated/dataModel";
 
