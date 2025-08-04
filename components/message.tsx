@@ -161,5 +161,3 @@ const { parentMessageId, onOpenMessage, onClose } = usePanel();
     );
   }
   }
-
-
