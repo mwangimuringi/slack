@@ -169,6 +169,20 @@ const Message = ({ message, isEditing, isRemovingMessage, handleEdit, handleRemo
     "Delete message?",
     "Are you sure you want to delete this message? This cannot be undone.",
   );
+
+  const { mutate: updateMessage, isPending: isUpdatingMessage } = useUpdateMessage();
+  const { mutate: removeMessage, isPending: isRemovingMessage } = useRemoveMessage();
+  const { mutate: toggleReaction, isPending: isTogglingReaction } = useToggleReaction();
+
+  const isPending = isUpdatingMessage || isEditing;
+
+  const handleReaction = (value: string) => {
+    toggleReaction({ messageId: message.id, value }, {
+      onError: () => {
+        toast.error("Failed to toggle reaction");
+      }
+    });
+  };
   return (
     <>
     <ConfirmDialog />
