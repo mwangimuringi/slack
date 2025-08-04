@@ -171,7 +171,6 @@ const Message = ({ message, isEditing, isRemovingMessage, handleEdit, handleRemo
   );
 
   const { mutate: updateMessage, isPending: isUpdatingMessage } = useUpdateMessage();
-  const { mutate: removeMessage, isPending: isRemovingMessage } = useRemoveMessage();
   const { mutate: toggleReaction, isPending: isTogglingReaction } = useToggleReaction();
 
   const isPending = isUpdatingMessage || isEditing;
