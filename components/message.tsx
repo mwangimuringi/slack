@@ -162,8 +162,8 @@ const { parentMessageId, onOpenMessage, onClose } = usePanel();
   }
   }
 
-  const avatarFallback = authorName.charAt(0).toUpperCase();
-
+const Message = ({ message, isEditing, isRemovingMessage, handleEdit, handleRemove, handleReaction, hideThreadButton }) => {
+  
   return (
     <>
     <ConfirmDialog />
