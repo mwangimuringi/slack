@@ -163,7 +163,12 @@ const { parentMessageId, onOpenMessage, onClose } = usePanel();
   }
 
 const Message = ({ message, isEditing, isRemovingMessage, handleEdit, handleRemove, handleReaction, hideThreadButton }) => {
-  
+  const { parentMessageId, onOpenMessage, onClose } = usePanel();
+
+  const [ConfirmDialog, confirm] = useConfirm(
+    "Delete message?",
+    "Are you sure you want to delete this message? This cannot be undone.",
+  );
   return (
     <>
     <ConfirmDialog />
