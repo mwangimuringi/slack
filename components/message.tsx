@@ -175,14 +175,7 @@ const Message = ({ message, isEditing, isRemovingMessage, handleEdit, handleRemo
 
   const isPending = isUpdatingMessage || isEditing;
 
-  const handleReaction = (value: string) => {
-    if (isPending) return;
-    toggleReaction({ messageId: message.id, value }, {
-      onError: () => {
-        toast.error("Failed to toggle reaction");
-      }
-    });
-  };
+
   return (
     <>
     <ConfirmDialog />
