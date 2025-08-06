@@ -23,6 +23,9 @@ const MemberPage = () => {
         workspaceId,
         memberId,
       },
+      { onError(error) {
+        toast.error("Failed to create conversation");
+      } }
       {
         onError(error) {
           toast.error("Failed to create conversation");
