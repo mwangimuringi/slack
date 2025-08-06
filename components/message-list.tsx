@@ -91,8 +91,6 @@ export const MessageList = ({
                 authorImage={message.user.image}
                 authorName={message.user.name}
                 isAuthor={message.memberId === currentMember?._id}
-                reactions {IdleDeadline.name}   
-                reactionsCount={message.reactionsCount}
                 body={message.body}
                 image={message.image}
                 updatedAt={message.updatedAt}
