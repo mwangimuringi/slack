@@ -100,8 +100,9 @@ export const MessageList = ({
                 hideThreadButton={variant === "thread"}
                 threadCount={message.threadCount}
                 threadImage={message.threadImage}
-                threadTimestamp={message.threadTimestamp}
-              />
+                threadTimestamp={message.threadTimestamp} reactions={[]} setEditingId={function (id: Id<"messages"> | null): void {
+                  throw new Error("Function not implemented.");
+                } }              />
             );
           })}
           <div
