@@ -12,6 +12,7 @@ export const createOrGet = mutation({
 
     if (!userId) {
       throw new Error("Unauthorized");
+      return;
     }
 
     const currentMember = await ctx.db
