@@ -15,6 +15,5 @@ export const useGetMembers = ({ workspaceId }: UseGetMembersProps) => {
   return {
     data,
     isLoading,
-    error: data?.error,
   };
 };
