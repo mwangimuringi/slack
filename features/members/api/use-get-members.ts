@@ -14,6 +14,7 @@ export const useGetMembers = ({ workspaceId }: UseGetMembersProps) => {
 
   return {
     data,
+    isPending: !data && !isLoading,
     isLoading,
   };
 };
