@@ -7,8 +7,6 @@ export const createOrGet = mutation({
     memberId: v.id("members"),
     workspaceId: v.id("workspaces"),
   },
-    workspaceId: v.id("workspaces"),
-  },
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx);
 
@@ -41,19 +39,19 @@ export const createOrGet = mutation({
           q.and(
             q.eq(q.field("memberOneId"), otherMember._id),
             q.eq(q.field("memberTwoId"), currentMember._id)
-          ),
+          )
         )
       )
       .unique();
-      if (existingConversation) {
-        return existingConversation._id;
-      }
+    if (existingConversation) {
+      return existingConversation._id;
+    }
 
-      const conversationId = await ctx.db.insert("conversations", {
-        workspaceId: args.workspaceId,
-        memberOneId: currentMember._id,
-        memberTwoId: otherMember._id,
-      });
+    const conversationId = await ctx.db.insert("conversations", {
+      workspaceId: args.workspaceId,
+      memberOneId: currentMember._id,
+      memberTwoId: otherMember._id,
+    });
 
     return conversationId;
   },
