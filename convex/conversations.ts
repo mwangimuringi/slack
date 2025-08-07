@@ -7,6 +7,8 @@ export const createOrGet = mutation({
     memberId: v.id("members"),
     workspaceId: v.id("workspaces"),
   },
+    workspaceId: v.id("workspaces"),
+  },
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx);
 
