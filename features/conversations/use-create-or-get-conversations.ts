@@ -55,6 +55,7 @@ export const useCreateOrGetConversation = () => {
       }
     },
     [mutation]
+    [mutation]
   );
 
   return {
