@@ -96,6 +96,7 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
         onSubmit={handleSubmit}
         disabled={isPending}
         innerRef={editorRef}
+        theme="bubble"
       />
     </div>
   );
