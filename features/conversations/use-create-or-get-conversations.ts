@@ -66,4 +66,8 @@ export const useCreateOrGetConversation = () => {
     isError,
     isSettled,
   };
+    isSuccess,
+    isError,
+    isSettled,
+  };
 };
